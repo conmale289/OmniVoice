@@ -116,6 +116,14 @@ uv sync
 
 > **Tip**: Can use mirror with `uv sync --default-index "https://mirrors.aliyun.com/pypi/simple"`
 
+For desktop UI support, install the desktop extra:
+
+```bash
+pip install "omnivoice[desktop]"
+# or
+uv sync --extra desktop
+```
+
 ---
 
 ## Quick Start
@@ -123,6 +131,10 @@ uv sync
 Try OmniVoice without coding:
 
 - Launch the local web UI: `omnivoice-demo --ip 0.0.0.0 --port 8001`
+
+- Launch the desktop app (PySide6): `omnivoice-desktop`
+  - See [docs/desktop_app.md](docs/desktop_app.md) for full desktop workflow.
+  - Feature rationale: [docs/desktop_feature_research.md](docs/desktop_feature_research.md)
 
 - Or try it directly on [HuggingFace Space](https://huggingface.co/spaces/k2-fsa/OmniVoice)
 
@@ -246,13 +258,14 @@ audio = model.generate(text="He plays the [B EY1 S] guitar while catching a [B A
 
 ## Command-Line Tools
 
-Three CLI entry points are provided. The CLI tools support all features available in the Python API (voice cloning, voice design, auto voice, generation parameters, etc.) — all controlled via command-line arguments.
+Four CLI entry points are provided. The CLI tools support all features available in the Python API (voice cloning, voice design, auto voice, generation parameters, etc.) — all controlled via command-line arguments.
 
 | Command | Description | Source |
 |---|---|---|
 | `omnivoice-demo` | Interactive Gradio web demo | [omnivoice/cli/demo.py](omnivoice/cli/demo.py) |
 | `omnivoice-infer` | Single-item inference | [omnivoice/cli/infer.py](omnivoice/cli/infer.py) |
 | `omnivoice-infer-batch` | Batch inference across multiple GPUs | [omnivoice/cli/infer_batch.py](omnivoice/cli/infer_batch.py) |
+| `omnivoice-desktop` | Native desktop UI (model load, synth, playback, batch runner) | [omnivoice/desktop/app.py](omnivoice/desktop/app.py) |
 
 ### Demo
 

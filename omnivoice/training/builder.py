@@ -195,14 +195,17 @@ def build_dataloaders(
         ),
     )
 
+    # pin_memory is only supported on CUDA/CPU, not MPS
+    _pin_memory = torch.cuda.is_available()
+    _prefetch = 4 if config.num_workers > 0 else None
     train_loader = DataLoader(
         train_dataset,
         batch_size=None,
         num_workers=config.num_workers,
         collate_fn=collate_fn,
-        worker_init_fn=init_fn,
-        pin_memory=True,
-        prefetch_factor=4,
+        worker_init_fn=init_fn if config.num_workers > 0 else None,
+        pin_memory=_pin_memory,
+        prefetch_factor=_prefetch,
     )
 
     eval_loader = None
@@ -224,12 +227,14 @@ def build_dataloaders(
                 processor=processor,
                 length_fn=lambda s: s["length"],
             )
+        # pin_memory is only supported on CUDA/CPU, not MPS
+        _pin_memory = torch.cuda.is_available()
         eval_loader = DataLoader(
             dev_dataset,
             batch_size=None,  # Each item is already a collated batch
             num_workers=1,
+            pin_memory=_pin_memory,
             collate_fn=collate_fn,
-            pin_memory=True,
             prefetch_factor=2,
         )
 

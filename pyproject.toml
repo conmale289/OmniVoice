@@ -53,11 +53,15 @@ eval = [
     "zhon",                # Chinese punctuation
     "unidecode",            # Unicode normalization
 ]
+desktop = [
+    "PySide6>=6.8.0",
+]
 
 [project.scripts]
 omnivoice-infer = "omnivoice.cli.infer:main"
 omnivoice-infer-batch = "omnivoice.cli.infer_batch:main"
 omnivoice-demo = "omnivoice.cli.demo:main"
+omnivoice-desktop = "omnivoice.desktop.app:main"
 
 [project.urls]
 Homepage = "https://github.com/k2-fsa/OmniVoice"

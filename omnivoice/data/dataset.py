@@ -39,6 +39,7 @@ import io
 import json
 import logging
 import os
+from pathlib import Path
 import random
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
@@ -361,6 +362,8 @@ class JsonlDatasetReader(IterableDataReader):
 
     Each JSONL line should be a JSON object with at least:
         {"id": "...", "audio_path": "/path/to/audio.wav", ...}
+    For backward compatibility, ``audio`` is also accepted as an alias of
+    ``audio_path``.
 
     Yields dicts of the form: {"audio": Tensor(1, T), "label": dict}
     """
@@ -423,13 +426,16 @@ class JsonlDatasetReader(IterableDataReader):
             )
 
         for meta in source:
-            audio_path = meta.get("audio_path")
+            audio_path = meta.get("audio_path") or meta.get("audio")
             if not audio_path or not os.path.exists(audio_path):
                 logging.warning(
                     f"Skipping {meta.get('id', '?')}: audio_path missing or not found"
                 )
                 continue
             try:
+                if not meta.get("id"):
+                    # Keep sample keys stable when input JSONL omits an explicit id.
+                    meta["id"] = Path(audio_path).stem
                 waveform = torch.from_numpy(
                     load_audio(audio_path, self.sample_rate)
                 )
